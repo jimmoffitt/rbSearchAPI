@@ -1,6 +1,8 @@
 [Coming soon...] 
-***Ruby Client for Gnip Historical Search API***
-   ==========================================
+***
+Ruby Client for Gnip Historical Search API
+***
+==========================================
 
 
 Many design details have not been implemented yet.  For example: (and now for the official TODO list)
