@@ -7,6 +7,10 @@ Many design details have not been implemented yet.  For example: (and now for th
 + [] No official notification of minutes that exceed "activities per request" limit (currently 500).
 
 
+This was recently written to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder.  I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets.  And that works well.  Soon I need to flush out the many other details!
+
+
+
 
  ***Summary***
 
