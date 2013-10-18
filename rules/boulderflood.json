@@ -1,0 +1,49 @@
+{
+  "rules" :
+    [
+        {
+          "value" : "#coflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "#coloradoflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "#boulderflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "#longmontflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "#lovelandflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "#denverflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "#jeffcoflood",
+          "tag" : "flood_hashtag"
+        },
+        {
+          "value" : "from:boulderoem",
+          "tag" : "agencies"
+        },
+        {
+          "value" : "to:boulderoem OR @boulderoem",
+          "tag" : "agencies"
+        },
+        {
+          "value" : "from:nwsboulder",
+          "tag" : "agencies"
+        },
+        {
+          "value" : "to:nwsboulder OR @nwsboulder",
+          "tag" : "agencies"
+        }
+    ]
+}

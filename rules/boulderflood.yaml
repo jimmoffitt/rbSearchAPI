@@ -1,0 +1,47 @@
+time:
+  - start  : 201309080600
+  - end    : 201309250600
+
+rules:
+  - value  : "#coflood"
+    tag    : flood_hashtag
+  - value  : "#coloradoflood"
+    tag    : flood_hashtag
+  - value  : "#boulderflood"
+    tag    : flood_hashtag
+  - value  : "#longmontflood"
+    tag    : flood_hashtag
+  - value  : "#lovelandflood"
+    tag    : flood_hashtag
+  - value  : "#denverflood"
+    tag    : flood_hashtag
+  - value  : "#estesflood"
+    tag    : flood_hashtag
+  - value  : "#estesparkflood"
+    tag    : flood_hashtag
+  - value  : "#jeffcoflood"
+    tag    : flood_hashtag
+  - value  : "#denverflood"
+    tag    : flood_hashtag
+  - value  : "#arvadaflood"
+    tag    : flood_hashtag
+  - value  : "from:boulderoem"
+    tag    : agencies
+  - value  : "to:boulderoem OR @boulderoem"
+    tag    : agencies
+  - value  : "from:nwsboulder"
+    tag    : agencies
+  - value  : "to:nwsboulder OR @nwsboulder"
+    tag    : agencies
+  - value  : "#stvrainriver"
+    tag    : river_hashtag
+  - value  : "#bouldercreek"
+    tag    : river_hashtag
+  - value  : "#lefthandcreek"
+    tag    : river_hashtag
+  - value  : "#bigthompson"
+    tag    : river_hashtag
+  - value  : "#cowx profile_region:colorado"
+    tag    : weather_hashtag
+  - value  : "#wxreport profile_region:colorado"
+    tag    : weather_hashtag
