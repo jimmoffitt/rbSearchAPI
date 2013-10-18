@@ -49,7 +49,7 @@ Example usage:
 
 + $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.json"
 
-+ search_api.rb [-r RULE] [-s SEARCH_URL] [-u USERNAME] [-p PASSWORD] [-c COUNT_ONLY] 
++ $ruby ./search_api.rb [-r RULE] [-s SEARCH_URL] [-u USERNAME] [-p PASSWORD] [-c COUNT_ONLY] 
 
 
 
