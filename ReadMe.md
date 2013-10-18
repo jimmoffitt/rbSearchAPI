@@ -1,5 +1,13 @@
 [Coming soon...] Ruby Client for Gnip Historical Search API
 
+Many design details have not been implemented yet.  For example: (and now for the official TODO list)
+
+[] No support yet for exercising the Search API with the command-line yet. Rather there are hard-coded settings in the code that will either be parsed out of the config file or passed in (like toDate and fromDate).
+[] No support yet for encoding rules in JSON (or passed in via command-line).  Currently only YAML is supported.
+[] No official notification of minutes that exceed "activities per request" limit (currently 500).
+
+
+
  ***Summary***
 
  Manages the activity data retrieval for one or more rules using the Gnip Search API, which makes available the last 30-days of Twitter data.  This client makes use of the Search API "counts per minute" method by adjusting data request periods in reference to the current limit of 500 activities per data request.  In this way the client can retrieve all tweets for a rule as long as there is no single minute with more than 500 activities. 
