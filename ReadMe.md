@@ -1,6 +1,6 @@
 [Coming soon...] 
 ***
-Ruby Client for Gnip Historical Search API
+***Ruby Client for Gnip Historical Search API***
 ***
 ==========================================
 
@@ -13,6 +13,8 @@ Many design details have not been implemented yet.  For example: (and now for th
 
 
 This was recently written to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder.  I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets.  And that works well.  Soon I need to flush out the many other details!
+
+Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
 
 
 
@@ -36,17 +38,18 @@ Search requests to the Historical Search API allow you to retrieve up to the las
  + Single rule passed in via the command-line.
 
 
-Rule Tag support
+Rule Tag support 
+
+[details to be documented]
 
 
 Example usage:
 
-$ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.yaml"
++ $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.yaml"
 
-$ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.json"
++ $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.json"
 
-
-search_api.rb [-r RULE] [-s SEARCH_URL] [-u USERNAME] [-p PASSWORD] [-c COUNT_ONLY] 
++ search_api.rb [-r RULE] [-s SEARCH_URL] [-u USERNAME] [-p PASSWORD] [-c COUNT_ONLY] 
 
 
 
