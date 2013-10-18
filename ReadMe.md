@@ -2,9 +2,9 @@
 
 Many design details have not been implemented yet.  For example: (and now for the official TODO list)
 
-[] No support yet for exercising the Search API with the command-line yet. Rather there are hard-coded settings in the code that will either be parsed out of the config file or passed in (like toDate and fromDate).
-[] No support yet for encoding rules in JSON (or passed in via command-line).  Currently only YAML is supported.
-[] No official notification of minutes that exceed "activities per request" limit (currently 500).
++ [] No support yet for exercising the Search API with the command-line yet. Rather there are hard-coded settings in the code that will either be parsed out of the config file or passed in (like toDate and fromDate).
++ [] No support yet for encoding rules in JSON (or passed in via command-line).  Currently only YAML is supported.
++ [] No official notification of minutes that exceed "activities per request" limit (currently 500).
 
 
 
