@@ -7,8 +7,7 @@
 
 Many design details have not been implemented yet.  For example: (and now for the official TODO list)
 
-+ [] No support yet for exercising the Search API with the command-line yet. Rather there are hard-coded settings in the code that will either be parsed out of the config file or passed in (like toDate and fromDate).
-+ [] No support yet for encoding rules in JSON (or passed in via command-line).  Currently only YAML is supported.
++ [] No support yet for exercising the Search API with the command-line. Rather there are hard-coded settings in the code that will either be parsed out of the config file or passed in (like toDate and fromDate).
 + [] No official notification of minutes that exceed "activities per request" limit (currently 500).
 
 
@@ -16,6 +15,7 @@ This was recently written to use Search API in order to collect the ~290,000 twe
 
 Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
 
+Rule arrays can be passed in as JSON or YAML.
 
 
 
