@@ -1,18 +1,26 @@
 #Makes minute count request, then navigates those results, consolidating minute counts up to 500 for data requests.
-#Need to notify about minutes with more than 500 matches.
+#Loads up rules, and loops through them.
+#Writes to database or to files.
+#TODO: [] Need to notify about minutes with more than 500 matches.
+#TODO: [] If a rule tag is supplied, we should tack that onto the activity payload.
+#TODO: [] Mode to just get counts.
+#TODO: [] command-line support for making single calls, both counts and data.
+#TODO: [] add up collected activities and compare to count summation.
 
+#Example usage:
 
+# Retrieve minute counts for all rules for specified period.
+# ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/theseRules.yaml"  -l -s "2013-10-18 06:00" -e "2013-10-20 06:00"
+#           Defaults: -s = -30.days, -e = now,  publisher = twitter, duration = "minute"
 
-#TODO: load up rules, and loop through them.
-#TODO: implement writing to database or to files.
+# Get Data for all rules for specified period.
+# ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/theseRules.yaml"  -s "2013-10-18 06:00" -e "2013-10-20 06:00"
+#           Defaults: -s = -30.days, -e = now,  publisher = twitter,
 
-#TODO: If a rule tag is supplied, we should tack that onto the activity payload.
-#TODO: mode to just get counts.
-#TODO: command-line support for making single calls, both counts and data.
-#TODO: add up collected activities and compare to count summation.
+# -e -s : can have PowerTrack format (YYYYMMDDHHMM) as well.
 
-
-
+#SearchConfig = credentials, stream labels, system config such as in/out boxes.
+#theseRules = YAML or JSON array of rules/tags.
 
 
 class SearchApi
@@ -23,7 +31,7 @@ class SearchApi
     require "fileutils"
     require "zlib"
     require "time"
-
+63
     #PowerTrack classes
     require_relative "./pt_restful"
     require_relative "./pt_database"
@@ -124,11 +132,10 @@ class SearchApi
     end
 
     def get_search_rules
-        if !@rules_file.nil then
+        if !@rules_file.nil then #TODO: Add JSON option.
             @rules.loadRulesYAML(@rules_file)
         end
     end
-
 
     #-----------------------------------------------------
     #To be ported to a separate 'common' module
@@ -149,6 +156,25 @@ class SearchApi
         time = Time.new
         time = Time.parse(time_string)
         return time
+    end
+
+    def make_end_time(start_time, interval)
+
+        #Convert to date object.
+        time = getDateObject(start_time)
+
+        #Add interval. Adding seconds...
+        if interval == "day" then
+            time = time + (24 * 60 * 60)
+
+        elsif interval == "hour" then
+            time = time + (60 * 60)
+
+        elsif interval == "minute" then
+            time = time + (60)
+        end
+
+        return getDateString(time)
     end
 
     #-----------------------------------------------------
@@ -255,7 +281,7 @@ class SearchApi
         return activities
     end
 
-    def get_data(rule,start_time,end_time,tag)
+    def make_data_request(rule,start_time,end_time,tag)
 
         if start_time == end_time then
             p "BUG ALERT!"
@@ -324,25 +350,6 @@ class SearchApi
 
     end
 
-    def make_end_time(start_time, interval)
-
-        #Convert to date object.
-        time = getDateObject(start_time)
-
-        #Add interval. Adding seconds...
-        if interval == "day" then
-            time = time + (24 * 60 * 60)
-
-        elsif interval == "hour" then
-            time = time + (60 * 60)
-
-        elsif interval == "minute" then
-            time = time + (60)
-        end
-
-        return getDateString(time)
-    end
-
     #Builds a hash and generates a JSON string.
     #Defaults:
     #@interval = "hour"   #Set in constructor.
@@ -392,7 +399,7 @@ class SearchApi
 
 
 
-    def process_data(rule, start_time, end_time, interval, tag=nil)
+    def get_data(rule, start_time, end_time, interval, tag=nil)
         #Get counts based on passed-in interval
 
         p "Getting '#{interval}' counts for #{start_time} -to- #{end_time} "
@@ -432,10 +439,10 @@ class SearchApi
                     p "NOTIFY about data fidelity..."
 
                 elsif interval == "hour" then
-                    process_data(rule, bin["timePeriod"], bins[index+1]["timePeriod"], "minute")
+                    make_data_request(rule, bin["timePeriod"], bins[index+1]["timePeriod"], "minute")
 
                 elsif interval == "day" then
-                    process_data(rule, bin["timePeriod"], bins[index+1]["timePeriod"], "hour")
+                    make_data_request(rule, bin["timePeriod"], bins[index+1]["timePeriod"], "hour")
                 end
 
             else
@@ -483,12 +490,34 @@ if __FILE__ == $0  #This script code is executed when running this file.
 
     require 'optparse'
 
+    #-------------------------------------------------------------------------------------------------------------------
     #Example command-lines
+
+    #Options:
+    #       Pass in configuration and rules files.
+    #       Pass in everything on command-line.
+    #       Pass in configuration file and all search parameters.
+    #       Pass in configuration parameters and rules file.
+
+    #Pass in two files, the Gnip Search API config file and a Rules file.
     # $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.yaml"
     # $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.json"
+
+    #Typical command-line usage.
+    # Specifying URL.  Passing in ISO formatted dates.
+    # $ruby ./search_api.rb -a "http://search.gnip.com/" -u UserName@here.com -pMyPassword -r "rain OR weather (profile_region:colorado)" -s "2013-10-18 06:00" -e "2013-10-20 06:00"
+
+    #Get minute counts.  Returns JSON time-series of minute, hour, or day counts.
+    # $ruby ./search_api.rb -l -d "minutes"
+    #               -a "http://search.gnip.com/" -u UserName@here.com -pMyPassword
+    #               -r "rain OR weather (profile_region:colorado)" -s "2013-10-18 06:00" -e "2013-10-20 06:00"
+
+    # Passing in configuration file to specify Search API URL, dates as YYYYMMDDHHMM. Passing in search parameters.
+    #$ruby ./search_api.rb -c "./SearchConfig.yaml"
+    #                -r "rain OR weather (profile_region:colorado)" -s "201310180600" -e "201310200600"
+
     # $ruby ./search_api.rb [-r RULE] [-s SEARCH_URL] [-u USERNAME] [-p PASSWORD] [-c COUNT_ONLY]
-
-
+    #-------------------------------------------------------------------------------------------------------------------
 
     OptionParser.new do |o|
         o.on('-c CONFIG') { |config| $config = config}
@@ -496,14 +525,21 @@ if __FILE__ == $0  #This script code is executed when running this file.
         o.on('-s START') { |start_date| $start_date = start_date}
         o.on('-e END') { |end_date| $end_date = end_date}
 
-        o.on('-s SEARCH_URL') {|search_url| $search_url = search_url}
+        o.on('-a address') {|address| $address = address}
         o.on('-r RULE') {|rule| $rule = rule}
         o.on('-t TAG') {|tag| $tag = tag}
         o.on('-u USERNAME') {|username| $username = username}
         o.on('-p PASSWORD') {|password| $password = password}
         o.on('-l LOOK') {|look| $look = look}  #... as in look before you leap.
+        o.on('-d DURATION') {|duration| $duration = duration}  #... as in look before you leap.
+
+
+        o.on('-b PUBLISHER') {|publisher| $password = publisher}
         o.parse!
     end
+
+    #Process what was passed in.
+    #TODO: test whether a rules file was passed in or a single rule.
 
     if $config.nil? then
         $config = "./PowerTrackConfig_private.yaml"  #Default
@@ -512,21 +548,16 @@ if __FILE__ == $0  #This script code is executed when running this file.
     #Create a Rehyrdation PowerTrack object, passing in an account configuration file.
     p "Creating PT Search object with config file: " + $config
     oSearch = SearchApi.new($config)
+    oSearch.rules.rules = Array.new
 
-
-
-
-
-
-        '''
-    rule = "#longmontflood"
-    start_time = "201309100600"
-    end_time = "201309240600"
-    interval = "minute"
-    oSearch.process_data(rule,start_time,end_time,interval)
+    '''
+    rules = "#longmontflood"
+    start_time = "201309100600" ==> NOW - 30.days
+    end_time = "201309240600" ==> NOW
+    counts = []
+    counts = oSearch.getCounts(rule,start_time,end_time)
     '''
 
-    oSearch.rules.rules = Array.new
     #Load rules from a YAML file.
     oSearch.rules_file = "./rules/boulderflood.yaml"
     oSearch.rules.loadRulesYAML(oSearch.rules_file)
@@ -536,39 +567,11 @@ if __FILE__ == $0  #This script code is executed when running this file.
     oSearch.rules_file = "./rules/boulderflood.json"
     oSearch.rules.loadRulesJSON(oSearch.rules_file)
 
-
-
-
-    #start_time = "201309080600"
-    #end_time = "201309130600"
-    #end_time = "201310030600"
-
-    start_time = "201309130500"
-    end_time = "201310090600"
-
     interval = "minute"
     oSearch.rules.rules.each do |rule|
         p "Getting activities for rule: #{rule["value"]}"
-        oSearch.process_data(rule["value"],start_time,end_time,interval,rule["tag"])
+        oSearch.get_data(rule["value"],start_time,end_time,interval,rule["tag"])
     end
 
-
-    #rule = "#boulderflood"
-    #Let go get a count for a rule.  Currently defaults to hourly counts.
-    #counts_json = oSearch.getActivityCounts(rule)
-
-
-    #convert to array
-    #counts = Array.new
-
-    #counts = JSON.parse(counts_json["results"])
-
-    #counts.each { |count|
-
-    #    p count
-
-    #}
-
     p "Exiting"
-
 end
