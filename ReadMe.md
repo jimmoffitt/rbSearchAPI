@@ -48,11 +48,13 @@ Rule Tag support
 
 Example usage:
 
-+ $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.yaml"
++ $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml'
++ $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 7d 
++ $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s '2013-11-01 06:00' -e '2013-11-01 06:00'
++ $ruby ./search_api.rb -c './myConfig.yaml' -r '(weather OR snow) profile_region:colorado' -s 7d 
++ $ruby ./search_api.rb -c './myConfig.yaml' -l -r 'lang:en weather' 
++ $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -r gnip 
 
-+ $ruby ./search_api.rb -c "./SearchConfig.yaml" -r "./rules/mySearchRules.json"
-
-+ $ruby ./search_api.rb [-r RULE] [-s SEARCH_URL] [-u USERNAME] [-p PASSWORD] [-c COUNT_ONLY] 
 
 
 
