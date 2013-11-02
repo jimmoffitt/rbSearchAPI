@@ -7,7 +7,10 @@
 
 Many design details have not been implemented yet.  For example: (and now for the official TODO list)
 
-+ [] No support yet for exercising the Search API with the command-line. Rather there are hard-coded settings in the code that will either be parsed out of the config file or passed in (like toDate and fromDate).
++ [] Flush out support for exercising the Search API with the command-line. This client can be used in several ways:
+   + Pass in a configuration file and a rules files complete with dates.
+   + Call with a configuration file, everything else (including a rule) on command-line.
+   + Everything on command-line.
 + [] No official notification of minutes that exceed "activities per request" limit (currently 500).
 
 
