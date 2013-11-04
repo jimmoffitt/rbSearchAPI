@@ -48,15 +48,15 @@ Rule Tag support
 
 Example usage:
 
-+These examples pass in a configuration file that contains information like accoutn, username, and password:
-++ $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml'
-++ $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 7d 
-++ $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s '2013-11-01 06:00' -e '2013-11-01 06:00'
-++ $ruby ./search_api.rb -c './myConfig.yaml' -r '(weather OR snow) profile_region:colorado' -s 7d 
-++ $ruby ./search_api.rb -c './myConfig.yaml' -l -r 'lang:en weather' 
+These examples pass in a configuration file that contains information like accoutn, username, and password:
+* $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml'
+* $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 7d 
+* $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s '2013-11-01 06:00' -e '2013-11-01 06:00'
+* $ruby ./search_api.rb -c './myConfig.yaml' -r '(weather OR snow) profile_region:colorado' -s 7d 
+* $ruby ./search_api.rb -c './myConfig.yaml' -l -r 'lang:en weather' 
 
-+This example instead passes in credential details on the command-line:
-++ $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -r gnip 
+This example instead passes in credential details on the command-line:
+* $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -r gnip 
 
 
 
