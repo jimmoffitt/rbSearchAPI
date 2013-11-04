@@ -48,7 +48,13 @@ Rule Tag support
 
 Example usage:
 
-These examples pass in a configuration file that contains information like accoutn, username, and password:
+At a minimum, the following parameters are needed to make a Search API request:
+
+* Authentication details: username and password.  They can be provided on command-line or as part of a specified command-line.
+* Account name or Search API URL.  If account name is provided, the URL is deter
+
+
+These examples pass in a configuration file that contains information like account name, username, and password:
 * $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml'
 * $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 7d 
 * $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s '2013-11-01 06:00' -e '2013-11-01 06:00'
