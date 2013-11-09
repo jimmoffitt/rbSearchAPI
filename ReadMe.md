@@ -1,18 +1,21 @@
-[Coming soon...] 
+[Coming soon...  Under major construction] 
 ***
 ***Ruby Client for Gnip Historical Search API***
 ***
 ==========================================
 
-***Search API Description***
+***Gnip Search API***
 
 Search requests to the Historical Search API allow you to retrieve up to the last 500 results for a given timeframe in the last 30 days. It can be used to retrieve the most recent results for a high volume query, all results for a small time slice, or all of the results in the last 30 days for a low volume query. The Search endpoint is ideal for allowing users to search for recent data for a query or topic. Searches can be refined to any timeframe in the last 30 days to analyze the data in that given timeframe.
 
 More information on the Search API can be found [HERE] (http://support.gnip.com/customer/portal/articles/1312908-search-api).
 
-**Overview**
+**Client Overview**
 
-Manages the activity data retrieval for one or more rules using the Gnip Search API, which makes available the last 30-days of Twitter data.  This client makes use of the Search API "counts per minute" method by adjusting data request periods in reference to the current limit of 500 activities per data request.  In this way the client can retrieve all tweets for a rule as long as there is no single minute with more than 500 activities.  
+This client application helps manage the data retrieval from the Gnip Search API.  The client 
+
+
+for one or more rules using the Gnip Search API, which makes available the last 30-days of Twitter data.  This client makes use of the Search API "counts per minute" method by adjusting data request periods in reference to the current limit of 500 activities per data request.  In this way the client can retrieve all tweets for a rule as long as there is no single minute with more than 500 activities.  
 
 This Search API Ruby client supports submitting multiple rules.  A single rule can be passed in on the command-line, or a Rules file can be passed in and the client will make a Search API request for each rule. 
 
