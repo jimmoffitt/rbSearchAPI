@@ -48,11 +48,7 @@ At a minimum, the following parameters are needed to make a Search API request:
 
 
 
-**Background**
 
-This was recently written to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder.  I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets. And that works well.  Soon I need to flush out the many other details!
-
-Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
 
 **Command-line options**
 
@@ -78,6 +74,10 @@ Usage: search_api [options]
     -h, --help                       Display this screen.
 ```
 
+**Rule Tag support** 
+
+[details to be documented]
+
 **Usage Examples**
 
 [Narrative: can call by ] 
@@ -93,14 +93,11 @@ These examples pass in a configuration file that contains information like accou
 This example instead passes in credential details on the command-line:
 * $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -r gnip 
 
+**Background**
 
+This was recently written to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder.  I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets. And that works well.  Soon I need to flush out the many other details!
 
-
-
-
-**Rule Tag support** 
-
-[details to be documented]
+Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
 
 
 ---------------------------------------------
