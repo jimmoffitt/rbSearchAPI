@@ -10,6 +10,14 @@ Search requests to the Historical Search API allow you to retrieve up to the las
 
 More information on the Search API can be found [HERE] (http://support.gnip.com/customer/portal/articles/1312908-search-api).
 
+
+**Background**
+
+This was started to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder. There were about 30 rules/filters I wanted to search with using hashtags, weather terms and local agency names. I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets. And that worked well. 
+
+Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
+
+
 **Client Overview**
 
 This client application helps manage the data retrieval from the Gnip Search API. This client makes use of the Search API "counts per minute" method by adjusting data request periods in reference to the current limit of 500 activities per data request.  In this way the client can retrieve all tweets for a rule as long as there is no single minute with more than 500 activities.  
@@ -30,27 +38,24 @@ The client can also use the "counts" mechanism to return only the activity count
 If no "start" and "end" parameters are specified, the Search API defaults to 30-day requests. "Start" time defaults to 30 days ago from now, and "End" time default to "now". Start (-s) and end (-e) parameters can be specified in a variety of ways:
 
 * Standard PowerTrack format, YYYYMMDDHHmm (UTC)
-   * -s 201311070700 -e 201311080700 --> Search 2013-11-07 MST 
-   * -s 201311090000 --> Search since 2013-11-09 00:00 UTC
+   * -s 201311070700 -e 201311080700 --> Search 2013-11-07 MST. 
+   * -s 201311090000 --> Search since 2013-11-09 00:00 UTC.
 * "YYYY-MM-DD HH:mm" (UTC, use double-quotes please)
-   * 
-   * -e 
+   * -s "2013-11-04 07:00" -e "2013-11-07 06:00" --> Search 2013-11-04 and 2013-11-05 MST.
 * A combination of an integer and a character indicating "days" (#d), "hours" (#h) or "minutes" (#m).  Some examples:
    * -s 1d --> Start one day ago (i.e., search the last day)
    * -s 14d -e 7d --> Start 14 days ago and end 7 days ago (i.e. search the week before last)  
    * -s 6h --> Start six hours ago (i.e. search the last six hours)
-     
+
+
+**Command-line options**
 
 At a minimum, the following parameters are needed to make a Search API request:
 
 * Authentication details: username and password.  They can be provided on command-line or as part of a specified command-line.
-* Account name or Search API URL.  If account name is provided, the URL is deter
+* Account and stream names or Search API URL.  If account and stream names are provided, the URL generated from that information. 
+* At least one rule/filter. A single rule can be passed in on the command-line, or one or more passed in from a rules file.
 
-
-
-
-
-**Command-line options**
 
 ```
 Usage: search_api [options]
@@ -88,17 +93,9 @@ These examples pass in a configuration file that contains information like accou
 * $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s '2013-11-01 06:00' -e '2013-11-04 06:00'
 * $ruby ./search_api.rb -c './myConfig.yaml' -r '(weather OR snow) profile_region:colorado' -s 7d 
 * $ruby ./search_api.rb -c './myConfig.yaml' -l -r 'lang:en weather' 
-* 
 
 This example instead passes in credential details on the command-line:
-* $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -r gnip 
-
-**Background**
-
-This was recently written to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder.  I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets. And that works well.  Soon I need to flush out the many other details!
-
-Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
-
+* $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -n prod -r gnip 
 
 ---------------------------------------------
 Many design details have not been implemented yet.  For example: (and now for the official TODO list)
