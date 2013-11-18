@@ -52,9 +52,10 @@ If no "start" and "end" parameters are specified, the Search API defaults to 30-
 
 At a minimum, the following parameters are needed to make a Search API request:
 
-* Authentication details: username and password.  They can be provided on command-line or as part of a specified command-line.
+* Authentication details: username and password.  They can be provided on command-line or as part of a specified configuration file.
 * Account and stream names or Search API URL.  If account and stream names are provided, the URL generated from that information. 
 * At least one rule/filter. A single rule can be passed in on the command-line, or one or more passed in from a rules file.
+* There are three output options: activities can simply returned from script as "standard out", written to data files, or written to a database.  If not configuration file is used, data will written to standard out.  Otherwise you can specify your output preference in the config file.  If writing to data files or a database you must specify the details in the config file (i.e. output folder, database connection details).
 
 
 ```
