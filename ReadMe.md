@@ -80,6 +80,24 @@ Usage: search_api [options]
     -h, --help                       Display this screen.
 ```
 
+**Configuration Files**
+
+Many script and Search API options can be specified in a configuration (YAML) file as an alternative to passing in settings via the command-line.  Please note that if you are writing data to a database you must specify the database details in a configuration file.
+
+```yaml
+
+```
+
+
+**Rules Files**
+
+```json
+```
+
+```yaml
+```
+
+
 **Rule Tag support** 
 
 [details to be documented]
