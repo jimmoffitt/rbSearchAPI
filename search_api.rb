@@ -3,20 +3,21 @@
 #Writes to database or to files.
 #TODO: [] Need to notify about minutes with more than 500 matches.
 #TODO: [] Need to handle errors returned from Search API.
-#TODO: [] If a rule tag is supplied, we should tack that onto the activity payload.
-#TODO: [] Mode to just get counts.
-#TODO: [] command-line support for making single calls, both counts and data.
 #TODO: [] add up collected activities and compare to count summation.
+#TODO: [X] If a rule tag is supplied, we should tack that onto the activity payload.
+#TODO: [X] Mode to just get counts.
+#TODO: [X] command-line support for making single calls, both counts and data.
 
 #Example usage:
-
 
 # ./search_api.rb -c "./PowerTrackConfig_no_creds.yaml" -r "\"this exact phrase\"" -s 201310270000 -e 201310280000 -l
 # ./search_api.rb -c "./PowerTrackConfig.yaml" -r "\"marriage equality\"" -s 14d -l
 # ./search_api.rb -c "./PowerTrackConfig.yaml" -r "./rules/boulderflood.json" -s 14d -l
 # ./search_api.rb -c "./PowerTrackConfig.yaml" -r "./rules/boulderflood.json" -s 14d -l
-# ./search_api.rb -u me@there.com -p password -r "\"marriage equality\"" -s 14d -l
-# ./search_api.rb -u me@there.com -p password -r "\"marriage equality\"" -s 14d
+#Supplying creds, rule and getting counts written to standard out.
+# ./search_api.rb -u me@there.com -p password -r "#broncos #chiefs" -s 4d -l
+#Supplying creds, rule and getting data written to standard out.
+# ./search_api.rb -u me@there.com -p password -r "#broncos #chiefs" -s 4d
 
 
 
@@ -177,7 +178,7 @@ if __FILE__ == $0  #This script code is executed when running this file.
         end
     end
 
-    if ((oSearch.password.nil? or oSearch.password == "") and (oSearch.password_encoded == "") then
+    if (oSearch.password.nil? or oSearch.password == "") and (oSearch.password_encoded == "") then
         error_msgs << "Password is required. You can pass this in on command-line or specify in configuration file."
     end
 
