@@ -322,12 +322,14 @@ class PtSearch
         return filename
     end
 
-    def append_rules(response, rule, tag)
+    def append_rules(response, this_rule, tag)
 
         #Build the "matching_rules" hash that will be added to payload hash.
-        matching_rules = {}
-        matching_rules["value"] = rule
-        matching_rules["tag"] = tag
+        matching_rules = []
+        rule = {}
+        rule["value"] = this_rule
+        rule["tag"] = tag
+        matching_rules << rule
 
         #Load activities into a hash.
         activities = []
