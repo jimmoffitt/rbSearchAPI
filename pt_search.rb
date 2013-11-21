@@ -57,6 +57,7 @@ class PtSearch
         @product = "search"
         @interval = "minute"
         @max_results = API_ACTIVITY_LIMIT
+        @out_box = "./"
         @request_timestamp = Time.now - 1
 
         @rules = PtRules.new
@@ -116,12 +117,22 @@ class PtSearch
         #@in_box = checkDirectory(config["search"]["in_box"])
         #Managing request lists that have been processed.
         #@in_box_completed = checkDirectory(config["search"]["in_box_completed"])
-        #@out_box = checkDirectory(config["search"]["out_box"])
 
         @storage = config["search"]["storage"]
 
-        @write_rules = config["search"]["write_rules"]
-        #@compress_files = config["search"]["compress_files"]
+        begin
+            @out_box = checkDirectory(config["search"]["out_box"])
+        rescue
+            @out_box = "./"
+        end
+
+        begin
+            @compress_files = config["search"]["compress_files"]
+        rescue
+            @compress_files = false
+        end
+
+        #@write_rules = config["search"]["write_rules"]
 
         if @storage == "database" then #Get database connection details.
             db_host = config["database"]["host"]
@@ -316,6 +327,7 @@ class PtSearch
         return results
     end
 
+    #TODO: needs to check for existing file name, and serialize if needed.
     def get_file_name(rule, start_time, end_time)
         rule_str = rule.gsub(/[^[:alnum:]]/, "")[0..9]
         filename = "#{rule_str}_#{start_time}_#{end_time}"
