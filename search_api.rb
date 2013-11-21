@@ -240,8 +240,8 @@ if __FILE__ == $0  #This script code is executed when running this file.
     #Tag is completely optional.
     if !$tag.nil? then
         rule = {}
-        rule = oSearch.rules
-        rule["tag"] = $tag
+        rule = oSearch.rules.rules
+        rule[0]["tag"] = $tag
     end
 
     #Look is optional.
