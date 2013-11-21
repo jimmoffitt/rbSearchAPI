@@ -13,7 +13,7 @@ More information on the Search API can be found [HERE] (http://support.gnip.com/
 
 **Background**
 
-This was started to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder. There were about 30 rules/filters I wanted to search with using hashtags, weather terms and local agency names. I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per requests yet deliver full-fidelity of the ~290,000 tweets. And that worked well. 
+This was started to use Search API in order to collect the ~290,000 tweets around the recent flood here in Boulder. There were about 30 rules/filters I wanted to search with using hashtags, weather terms and local agency names. I was working against the 30-day window since the flood and therefore focused on the algorithm to use minute counts to create data requests subject to the 500/tweets per request yet deliver full-fidelity of the ~290,000 tweets. And that worked well. 
 
 Another feature that has been implemented is the ability to associate tags with the rules that are submitted and have those tags appended to the JSON payload.  The Search API does not support tags, and does not include the "matching_rules" metadata with the returned activities.  With my use-case I wanted this metadata, both matched rules and their tags, since I was blending Search API results in a MySQL database with other data collected in real-time and Historical PowerTrack.  Many of the queries I wanted to run on these data were going to be based on rules and tags.  Therefore, this client can append the rule and tag to the JSON payload in the standard gnip:matching_rules section. 
 
