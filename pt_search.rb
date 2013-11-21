@@ -113,15 +113,15 @@ class PtSearch
         end
 
         #User-specified in and out boxes.
-        @in_box = checkDirectory(config["search"]["in_box"])
+        #@in_box = checkDirectory(config["search"]["in_box"])
         #Managing request lists that have been processed.
-        @in_box_completed = checkDirectory(config["search"]["in_box_completed"])
-        @out_box = checkDirectory(config["search"]["out_box"])
+        #@in_box_completed = checkDirectory(config["search"]["in_box_completed"])
+        #@out_box = checkDirectory(config["search"]["out_box"])
 
         @storage = config["search"]["storage"]
 
         @write_rules = config["search"]["write_rules"]
-        @compress_files = config["search"]["compress_files"]
+        #@compress_files = config["search"]["compress_files"]
 
         if @storage == "database" then #Get database connection details.
             db_host = config["database"]["host"]
@@ -204,30 +204,41 @@ class PtSearch
         now = Time.new
         date = Time.new
 
+        #Handle minute notation.
         if input.downcase[-1] == "m" then
             date = now - (60 * input[0..-2].to_f)
             return get_date_string(date)
         end
 
+        #Handle hour notation.
         if input.downcase[-1] == "h" then
             date = now - (60 * 60 * input[0..-2].to_f)
             return get_date_string(date)
         end
 
+        #Handle day notation.
         if input.downcase[-1] == "d" then
             date = now - (24 * 60 * 60 * input[0..-2].to_f)
             return get_date_string(date)
         end
 
+        #Handle PowerTrack format, YYYYMMDDHHMM
         if input.length == 12 and numeric?(input) then
             return input
         end
 
+        #Handle "YYYY-MM-DD 00:00"
         if input.length == 16 then
             return input.gsub!(/\W+/, '')
         end
 
-        return 'error'
+        #Handle ISO 8601 timestamps, as in Twitter payload "2013-11-15T17:16:42.000Z"
+        if input.length > 16 then
+            date = Time.parse(input)
+            return get_date_string(date)
+        end
+
+        return 'Error, unrecognized timestamp.'
 
     end
 
@@ -282,6 +293,7 @@ class PtSearch
 
     def get_counts(rule, start_time, end_time, interval)
 
+        results = {}
         @count_total = 0
         @http.url = @urlCount
         data = build_count_request(rule, start_time, end_time, interval)
@@ -295,12 +307,13 @@ class PtSearch
         #p response.body
         @count_total = get_count_total(response.body)
 
+        results['total'] = @count_total
+
         #Parse response.body and build ordered array.
         temp = JSON.parse(response.body)
+        results['results'] = temp['results']
 
-        bins = temp["results"]
-
-        return bins
+        return results
     end
 
     def get_file_name(rule, start_time, end_time)
@@ -368,7 +381,8 @@ class PtSearch
         end
 
         #Add rules/tags to if configured to #TODO: and if AS format
-        if @write_rules then
+        #if @write_rules then
+        if !tag.nil? then
             api_response = append_rules(api_response, rule, tag)
         end
 
@@ -406,7 +420,7 @@ class PtSearch
 
             results.each do |activity|
 
-                p activity
+                #p activity
 
                 @datastore.storeActivity(activity.to_json)
 
@@ -475,8 +489,9 @@ class PtSearch
         #Get counts based on passed-in interval
 
         p "Getting '#{interval}' counts for #{start_time} -to- #{end_time} "
+        temp = get_counts(rule, start_time, end_time, interval)
         bins = []
-        bins = get_counts(rule, start_time, end_time, interval)
+        bins = temp['results']
 
         p "Have #{@count_total} activities for rule: #{rule}"
 
