@@ -153,15 +153,19 @@ class PtDatabase
     def get_matching_rules(matching_rules)
         values = ""
         tags = ""
-        matching_rules.each do |key, value|
 
-            if key == "value" then
-                values = values + value + ","
-            end
+        matching_rules.each do |this_match|
 
-            if key == "tag" then
-                if !value.nil? then
-                   tags = tags + value + ","
+            this_match.each do |key, value|
+
+                if key == "value" then
+                    values = values + value + ","
+                end
+
+                if key == "tag" then
+                    if !value.nil? then
+                       tags = tags + value + ","
+                    end
                 end
             end
         end
