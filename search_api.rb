@@ -291,6 +291,7 @@ if __FILE__ == $0  #This script code is executed when running this file.
     #Writing data to files.
     if !$outbox.nil? then
         oSearch.out_box = $outbox
+        oSearch.storage = "files"
 
         if !$zip.nil? then
             oSearch.compressed_files = true
