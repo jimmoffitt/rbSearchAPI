@@ -117,14 +117,17 @@ if __FILE__ == $0  #This script code is executed when running this file.
 
         #Period of search.  Defaults to end = Now(), start = Now() - 30.days.
         o.on('-s START', '--start_date', "UTC timestamp for beginning of Search period.
-                                         Specified as YYYYMMDDHHMM, \"YYYY-MM-DD HH:MM\" or use ##d, ##h or ##m.") { |start_date| $start_date = start_date}
+                                         Specified as YYYYMMDDHHMM, \"YYYY-MM-DD HH:MM\", YYYY-MM-DDTHH:MM:SS.000Z or use ##d, ##h or ##m.") { |start_date| $start_date = start_date}
         o.on('-e END', '--end_date', "UTC timestamp for ending of Search period.
-                                      Specified as YYYYMMDDHHMM, \"YYYY-MM-DD HH:MM\"' or use ##d, ##h or ##m.") { |end_date| $end_date = end_date}
+                                      Specified as YYYYMMDDHHMM, \"YYYY-MM-DD HH:MM\", YYYY-MM-DDTHH:MM:SS.000Z or use ##d, ##h or ##m.") { |end_date| $end_date = end_date}
 
         #Search rule.  This can be a single rule "\"this exact phrase\" OR keyword"
         o.on('-r RULE', '--rule', 'A single rule passed in on command-line, or a file containing multiple rules.') {|rule| $rule = rule}
         #Tag, optional.  Not in payload, but triggers a "matching_rules" section with rule/tag values.
         o.on('-t TAG', '--tag', 'Optional. Gets tacked onto payload if included. Alternatively, rules files can contain tags.') {|tag| $tag = tag}
+
+        o.on('-o OUTBOX', '--outbox', 'Optional. Triggers the generation of files and where to write them.') {|outbox| $outbox = outbox}
+        o.on('-z', '--zip', 'Optional. If writing files, compress the files with gzip.') {|zip| $zip = zip}
 
         #These trigger the estimation process, based on "duration" bucket size.
         o.on('-l', '--look', '"Look before you leap..."  Trigger the return of counts only.') {|look| $look = look}  #... as in look before you leap.
@@ -284,6 +287,16 @@ if __FILE__ == $0  #This script code is executed when running this file.
     if !$max_results.nil? then
         oSearch.max_results = $max_results
     end
+
+    #Writing data to files.
+    if !$outbox.nil? then
+        oSearch.out_box = $outbox
+
+        if !$zip.nil? then
+            oSearch.compressed_files = true
+        end
+    end
+
 
     #Publisher defaults to 'Twitter' (handled in client).
     if !$publisher.nil? then
