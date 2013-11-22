@@ -1,4 +1,3 @@
-[Coming soon...  Under major construction] 
 ***
 ***Ruby Client for Gnip Historical Search API***
 ***
@@ -16,9 +15,14 @@ This Ruby client is a wrapper around the Search API. It was written to be a flex
 
 * Rules can be submitted in a variety of ways: multiple rules from a JSON or YAML file or a single rule passed in via the command-line.  
 * Data can be provided in three ways: exported as files, written to a database, or written to standard out.
+* Activity counts can be returned by using the "-l" parameter (as in 'look before you leap').  Counts by minute, by hour, or by day can be returned.
 * If rules include tags, these metadata are appended to the 'gnip' payload of the JSON data.
 * Search start and end time can be specified in several ways: standard PowerTrack timestamps (YYYYMMDDHHMM), 
   ISO 8061/Twitter timestamps (2013-11-15T17:16:42.000Z), as "YYYY-MM-DD HH:MM", and also with simple notation indicating the number of minutes (30m), hours (12h) and days (14d).
+* Configuration and rule details can be specified by passing in files or specifying on the command-line, or a combination of both.  Here are some quick example:
+  * Using configuration and rules files, requesting 30-days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json"
+  * Using configuration and rules in files, requesting last 7 days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json" -s 7d
+  * Specifying everything on the command-line: ruby search_api.rb -u me@there.com -p password -a http://search.gnip.com/accounts/jim/search/prod.json -r "profile_region:colorado snow" -s 7d 
 
 
 **Background**
