@@ -77,23 +77,26 @@ At a minimum, the following parameters are needed to make a Search API request:
 ```
 Usage: search_api [options]
     -c, --config CONFIG              Configuration file (including path) that provides account and download settings.
-                                       Config files include username, password, account name and stream label/name.
+                                         Config files include username, password, account name and stream label/name.
     -u, --user USERNAME              User name for Basic Authentication.  Same credentials used for console.gnip.com.
     -p, --password PASSWORD          Password for Basic Authentication.  Same credentials used for console.gnip.com.
     -a, --address ADDRESS            Either Search API URL, or the account name which is used to derive URL.
     -n, --name NAME                  Label/name used for Stream API. Required if account name is supplied on command-line,
-                                   which together are used to derive URL.
+                                         which together are used to derive URL.
     -s, --start_date START           UTC timestamp for beginning of Search period.
                                          Specified as YYYYMMDDHHMM, "YYYY-MM-DD HH:MM" or use ##d, ##h or ##m.
     -e, --end_date END               UTC timestamp for ending of Search period.
-                                      Specified as YYYYMMDDHHMM, "YYYY-MM-DD HH:MM"' or use ##d, ##h or ##m.
+                                        Specified as YYYYMMDDHHMM, "YYYY-MM-DD HH:MM", YYYY-MM-DDTHH:MM:SS.000Z or use ##d, ##h or ##m.
     -r, --rule RULE                  A single rule passed in on command-line, or a file containing multiple rules.
     -t, --tag TAG                    Optional. Gets tacked onto payload if included. Alternatively, rules files can contain tags.
+    -o, --outbox OUTBOX              Optional. Triggers the generation of files and where to write them.
+    -z, --zip                        Optional. If writing files, compress the files with gzip.
     -l, --look                       "Look before you leap..."  Trigger the return of counts only.
     -d, --duration DURATION          The 'bucket size' for counts, minute, hour (default), or day
     -m, --max MAXRESULTS             Specify the maximum amount of data results.  10 to 500, defaults to 100.
     -b, --pub PUBLISHER              Defaults to Twitter, which currently is the only Publisher supported with Search.
     -h, --help                       Display this screen.
+
 ```
 
 **Configuration Files**
