@@ -21,7 +21,7 @@ This Ruby client is a wrapper around the Search API. It was written to be a flex
 * Search start and end time can be specified in several ways: standard PowerTrack timestamps (YYYYMMDDHHMM), 
   ISO 8061/Twitter timestamps (2013-11-15T17:16:42.000Z), as "YYYY-MM-DD HH:MM", and also with simple notation indicating the number of minutes (30m), hours (12h) and days (14d).
 * Configuration and rule details can be specified by passing in files or specifying on the command-line, or a combination of both.  Here are some quick example:
-  * Using configuration and rules files, requesting 30-days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json"
+  * Using configuration and rules files, requesting 30 days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json"
   * Using configuration and rules in files, requesting last 7 days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json" -s 7d
   * Specifying everything on the command-line: ruby search_api.rb -u me@there.com -p password -a http://search.gnip.com/accounts/jim/search/prod.json -r "profile_region:colorado snow" -s 7d 
 
@@ -134,6 +134,8 @@ database:
 
 **Rules Files**
 
+Multiple rules can be specified in JSON or YAML files.  Below is an example of each.  Note that the use of tags are optional.  While the Search API does not support tags or providing gnip:matching_rules metadata, this script will append that information to the JSON payloads.  Also note that an individual rule can be specified on the command-line. 
+
 ```json
 {
   "rules" :
@@ -181,7 +183,7 @@ These examples pass in a configuration file that contains information like accou
 * $ruby ./search_api.rb -c './myConfig.yaml' -l -r 'lang:en weather' 
 
 This example instead passes in credential details on the command-line:
-* $ruby -u 'jmoffitt@gnipcentral.com' -p myPass -a jim -n prod -r gnip 
+* $ruby -u 'me@there.com' -p myPass -a jim -n prod -r gnip 
 
 ---------------------------------------------
 Many design details have not been implemented yet.  For example: (and now for the official TODO list)
