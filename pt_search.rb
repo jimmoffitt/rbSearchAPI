@@ -33,7 +33,7 @@ class PtSearch
                   :rules, #rules object.
                   :rules_file, #YAML (or JSON?) file with rules.
                   :write_rules, #Append rules/tags to collected JSON, if it is normalized AS format.
-                  :compressed_files,
+                  :compress_files,
 
                   :interval,
                   :max_results,
@@ -499,7 +499,7 @@ class PtSearch
     def get_data(rule, start_time, end_time, interval, tag=nil)
         #Get counts based on passed-in interval
 
-        time_span = ""
+        time_span = "#{start_time} to #{end_time}.  "
         if start_time.nil? and end_time.nil? then
             time_span = "last 30 days."
         elsif start_time.nil? then
