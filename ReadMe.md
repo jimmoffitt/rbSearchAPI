@@ -138,6 +138,7 @@ database:
 
 Multiple rules can be specified in JSON or YAML files.  Below is an example of each.  Note that the use of tags are optional.  While the Search API does not support tags or providing gnip:matching_rules metadata, this script will append that information to the JSON payloads.  Also note that an individual rule can be specified on the command-line. 
 
+JSON rules file:
 ```json
 {
   "rules" :
@@ -157,7 +158,7 @@ Multiple rules can be specified in JSON or YAML files.  Below is an example of e
     ]
 }
 ```
-
+YAML rules file:
 ```yaml
 rules:
   - value  : "snow profile_region:colorado"
