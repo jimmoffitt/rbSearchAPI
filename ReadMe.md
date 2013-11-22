@@ -10,6 +10,16 @@ Search requests to the Historical Search API allow you to retrieve up to the las
 
 More information on the Search API can be found [HERE] (http://support.gnip.com/customer/portal/articles/1312908-search-api).
 
+***So, what does this search client do?***
+
+This Ruby client is a wrapper around the Search API. It was written to be a flexible tool for managing Search API requests. Here are some of the features:
+
+* Rules can be submitted in a variety of ways: multiple rules from a JSON or YAML file or a single rule passed in via the command-line.  
+* Data can be provided in three ways: exported as files, written to a database, or written to standard out.
+* If rules include tags, these metadata are appended to the 'gnip' payload of the JSON data.
+* Search start and end time can be specified in several ways: standard PowerTrack timestamps (YYYYMMDDHHMM), 
+  ISO 8061/Twitter timestamps (2013-11-15T17:16:42.000Z), as "YYYY-MM-DD HH:MM", and also with simple notation indicating the number of minutes (30m), hours (12h) and days (14d).
+
 
 **Background**
 
