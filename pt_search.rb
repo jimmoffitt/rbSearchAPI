@@ -400,10 +400,10 @@ class PtSearch
         #TODO: do something with the data!
         if @storage == "files" then #write the file.
 
-            p "Storing Search API data in a file..."
-
             filename = ""
             filename = get_file_name(rule, start_time, end_time)
+
+            p "Storing Search API data in file: #{filename}"
 
             if @compress_files then
                 File.open("#{@out_box}/#{filename}.json.gz", 'w') do |f|
