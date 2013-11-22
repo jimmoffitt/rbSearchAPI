@@ -294,7 +294,7 @@ if __FILE__ == $0  #This script code is executed when running this file.
         oSearch.storage = "files"
 
         if !$zip.nil? then
-            oSearch.compressed_files = true
+            oSearch.compress_files = true
         end
     end
 
