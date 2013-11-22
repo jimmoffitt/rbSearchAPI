@@ -384,7 +384,7 @@ class PtSearch
         @request_timestamp = Time.now
 
         response = @http.POST(data)
-        p "Getting data based on: #{data}" if ["files", "database"].include?(@storage)
+        #p "Getting data based on: #{data}" if ["files", "database"].include?(@storage)
 
         #Prepare to convert Search API JSON to hash.
         api_response = []
@@ -395,10 +395,7 @@ class PtSearch
         end
 
         #Add rules/tags to if configured to #TODO: and if AS format
-        #if @write_rules then
-        if !tag.nil? then
-            api_response = append_rules(api_response, rule, tag)
-        end
+        api_response = append_rules(api_response, rule, tag)
 
         #TODO: do something with the data!
         if @storage == "files" then #write the file.
@@ -502,7 +499,16 @@ class PtSearch
     def get_data(rule, start_time, end_time, interval, tag=nil)
         #Get counts based on passed-in interval
 
-        p "Getting '#{interval}' counts for #{start_time} -to- #{end_time} "
+        time_span = ""
+        if start_time.nil? and end_time.nil? then
+            time_span = "last 30 days."
+        elsif start_time.nil? then
+            time_span = "30 days ago to #{end_time}. "
+        elsif end_time.nil?
+            time_span = "#{start_time} to now.  "
+        end
+
+        p "Getting '#{interval}' counts for #{time_span} "
         temp = get_counts(rule, start_time, end_time, interval)
         bins = []
         bins = temp['results']
