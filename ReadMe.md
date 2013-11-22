@@ -1,7 +1,6 @@
 ***
 ***Ruby Client for Gnip Historical Search API***
 ***
-==========================================
 
 ***Gnip Search API***
 
@@ -21,9 +20,9 @@ This Ruby client is a wrapper around the Search API. It was written to be a flex
 * Search start and end time can be specified in several ways: standard PowerTrack timestamps (YYYYMMDDHHMM), 
   ISO 8061/Twitter timestamps (2013-11-15T17:16:42.000Z), as "YYYY-MM-DD HH:MM", and also with simple notation indicating the number of minutes (30m), hours (12h) and days (14d).
 * Configuration and rule details can be specified by passing in files or specifying on the command-line, or a combination of both.  Here are some quick example:
-  * Using configuration and rules files, requesting 30 days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json"
-  * Using configuration and rules in files, requesting last 7 days: ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json" -s 7d
-  * Specifying everything on the command-line: ruby search_api.rb -u me@there.com -p password -a http://search.gnip.com/accounts/jim/search/prod.json -r "profile_region:colorado snow" -s 7d 
+  * Using configuration and rules files, requesting 30 days: $ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json"
+  * Using configuration and rules in files, requesting last 7 days: $ruby search_api.rb -c "./myConfig.yaml" -r "./myRules.json" -s 7d
+  * Specifying everything on the command-line: $ruby search_api.rb -u me@there.com -p password -a http://search.gnip.com/accounts/jim/search/prod.json -r "profile_region:colorado snow" -s 7d 
 
 
 **Background**
@@ -169,31 +168,30 @@ rules:
 
 **Rule Tag support** 
 
-[details to be documented]
+Rules files can specify tags, and these will be included in the gnip:matching_rules metadata that this script appends to the JSON payload. Also, if passing in an individual rule via the command-line, a tag can also be provided:
+
+-r "snow profile_region:colorado" -t ski-biz
 
 **Usage Examples**
 
-[Narrative: can call by ] 
+This Ruby script was designed to be flexible in its usage.  So, below are some usage examples:  
 
-These examples pass in a configuration file that contains information like account name, username, and password:
-* $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 14d
+These examples pass in a configuration file that contains information like account name, username, and password and other settings:
+* $ruby search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 14d
 * $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s 21d -e 14d 
 * $ruby ./search_api.rb -c './myConfig.yaml' -r './rules/myRules.yaml' -s '2013-11-01 06:00' -e '2013-11-04 06:00'
-* $ruby ./search_api.rb -c './myConfig.yaml' -r '(weather OR snow) profile_region:colorado' -s 7d 
-* $ruby ./search_api.rb -c './myConfig.yaml' -l -r 'lang:en weather' 
+ 
+This example passes in an individual rule, and asks for the past 7 days:
+* $ruby search_api.rb -c './myConfig.yaml' -r '(weather OR snow) profile_region:colorado' -s 7d
+
+This example asks for 30-day hourly counts for the specified rule:
+* $ruby search_api.rb -c './myConfig.yaml' -r 'lang:en weather' -l -d hour 
 
 This example instead passes in credential details on the command-line:
-* $ruby -u 'me@there.com' -p myPass -a jim -n prod -r gnip 
-
----------------------------------------------
-Many design details have not been implemented yet.  For example: (and now for the official TODO list)
-
-+ [] There are many options in the Config file that are not available via the command-line.  That may be fine, and actually make sense.  Or not.  Need to review the options there, implement what is missing or remove those that need to be flushed.
-+ [] Flush out support for exercising the Search API with the command-line. This client can be used in several ways:
-   + Pass in a configuration file and a rules files.
-   + Call with a configuration file, everything else (including a rule) on command-line.
-   + Everything on command-line.
-+ [] No official notification of minutes that exceed "activities per request" limit (currently 500).
+* $ruby search_api.rb -u 'me@there.com' -p myPass -a myAccount -n prod -r 'lang:en weather'
+ 
+This example specifies the Search API end-point, and thus does not need to include account and stream label (name) information:
+* $ruby search_api.rb -u 'me@there.com' -p myPass -a http://search.gnip.com/accounts/myAccount/search/prod.json -r 'lang:en weather'
 
 
 
