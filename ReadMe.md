@@ -8,7 +8,7 @@ Search requests to the Historical Search API allow you to retrieve up to the las
 
 More information on the Search API can be found [HERE] (http://support.gnip.com/customer/portal/articles/1312908-search-api).
 
-***So, what does this search client do?***
+***So, what does this Gnip Search API client do?***
 
 This Ruby client is a wrapper around the Search API. It was written to be a flexible tool for managing Search API requests. Here are some of the features:
 
