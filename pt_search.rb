@@ -1,11 +1,3 @@
-=begin
-
-TODO:
-[X] Need to prevent more than 2 requests per second.
-[ ] max_results honored?  Passed through?  Defeats the core design aspect of wanting full fidelity?
-
-=end
-
 class PtSearch
 
     require "json"
@@ -253,17 +245,15 @@ class PtSearch
 
     end
 
-
     #-----------------------------------------------------
 
-
-    '' '
+    '''
     Process this single API response.
     May have up to ID_API_REQUEST_LIMIT activities to handle.
-    Depending on the configuraion, this method writes the activity data to the out_box or to the database.
+    Depending on the configuration, this method writes the activity data to the out_box or to the database.
 
     This is where you would implement any other datastore strategy.
-    ' ''
+    '''
 
     def process_response(response)
 
@@ -394,10 +384,9 @@ class PtSearch
             p "Handle error!"
         end
 
-        #Add rules/tags to if configured to #TODO: and if AS format
+        #Add rules/tags metadata.
         api_response = append_rules(api_response, rule, tag)
 
-        #TODO: do something with the data!
         if @storage == "files" then #write the file.
 
             filename = ""
@@ -422,7 +411,6 @@ class PtSearch
             results = []
             results = api_response["results"]
 
-
             #if !(results == null) then
             #    results = []
             #    results = JSON.parse(api_response)
@@ -432,12 +420,8 @@ class PtSearch
             results.each do |activity|
 
                 #p activity
-
                 @datastore.storeActivity(activity.to_json)
-
-
             end
-
         else
             results = []
             results = api_response["results"]
@@ -495,7 +479,6 @@ class PtSearch
         return JSON.generate(request)
     end
 
-
     def get_data(rule, start_time, end_time, interval, tag=nil)
         #Get counts based on passed-in interval
 
@@ -519,7 +502,6 @@ class PtSearch
             return
         end
 
-
         #Initialize some stuff.
         start_time = bins[0]["timePeriod"]
         end_time = bins[1]["timePeriod"]
@@ -528,17 +510,10 @@ class PtSearch
         #Walk the bins...
         bins.each_with_index do |bin, index|
 
-
-            #if index > 10590 then
-            #    p "debug stop"
-            #
-            #end
-
-
             #p "Looping '#{interval}' bins, index = #{index}, have #{bin["count"]} activities"
 
             #This handles the case where a single bin exceeds the limit.
-            #TODO: largely untested, and not really needed if you just start with interval = "minute" (no need to step
+            #Not really needed if you just start with interval = "minute".
             # down to shorter duration buckets)
             if bin["count"] > API_ACTIVITY_LIMIT then
                 #Logic for triggering counts for "next level down": day --> hour --> minute
@@ -563,12 +538,12 @@ class PtSearch
                         p "#{rule} --> Going to get #{count_total} activities for #{start_time} to #{end_time} ..." if ["files", "database"].include?(@storage)
 
                         if start_time == end_time then
-                            p "BUG ALERT!"
-                            end_time = bins[index+1]["timePeriod"] #TODO - this is a kludge, need to find source of problem...
+                            p "Error.  Start and End times not set correctly."
+                            end_time = bins[index+1]["timePeriod"] #TODO - need to find source of problem...
                         end
 
                         make_data_request(rule, start_time, end_time, tag)
-                        count_total = 0 #TODO: well, if no error occurred!
+                        count_total = 0
                     end
                     #Reset start time.
                     if index < bins.length then

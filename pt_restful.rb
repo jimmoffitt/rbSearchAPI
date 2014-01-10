@@ -1,3 +1,7 @@
+
+# [] Replace with rest-client gem? https://github.com/rest-client/rest-client
+# [] Following implementation useful as pseudo-code for other languages.
+
 #=======================================================================================================================
 #A simple RESTful HTTP class put together for this Rehydration script.
 #Future versions will most likely use an external PtREST object, common to all PowerTrack ruby clients.

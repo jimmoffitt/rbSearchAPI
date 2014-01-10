@@ -65,11 +65,11 @@ class PtRules
 
     #Methods for writing rules to files ================================================================================
     def writeRulesYAML(rules)
-
+        p 'Not implemented.'
     end
 
     def writeRulesJSON(rules)
-
+        p 'Not implemented.'
     end
 
 end
