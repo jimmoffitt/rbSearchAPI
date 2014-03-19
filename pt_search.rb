@@ -305,13 +305,9 @@ class PtSearch
         time = Time.parse(results.first['postedTime'])
         end_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
 
-        p time
-
         #Get end_time of this response payload.
         time = Time.parse(results.last['postedTime'])
         start_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
-
-        p time
 
         rule_str = rule.gsub(/[^[:alnum:]]/, "")[0..9]
         filename = "#{rule_str}_#{start_time}_#{end_time}"
@@ -413,8 +409,7 @@ class PtSearch
         end
         @request_timestamp = Time.now
 
-
-        p data
+        #p data
 
         begin
             response = @http.POST(data)
