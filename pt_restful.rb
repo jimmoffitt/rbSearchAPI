@@ -154,7 +154,14 @@ class PtRESTful
         request = Net::HTTP::Post.new(uri.path)
         request.body = @data
         request.basic_auth(@user_name, @password)
-        response = http.request(request)
+
+        begin
+            response = http.request(request)
+        rescue
+            sleep 5
+            response = http.request(request) #try again
+        end
+
         return response
     end
 
@@ -170,7 +177,14 @@ class PtRESTful
         request = Net::HTTP::Put.new(uri.path)
         request.body = @data
         request.basic_auth(@user_name, @password)
-        response = http.request(request)
+
+        begin
+            response = http.request(request)
+        rescue
+            sleep 5
+            response = http.request(request) #try again
+        end
+
         return response
     end
 
@@ -188,7 +202,13 @@ class PtRESTful
         request = Net::HTTP::Get.new(uri.request_uri)
         request.basic_auth(@user_name, @password)
 
-        response = http.request(request)
+        begin
+            response = http.request(request)
+        rescue
+            sleep 5
+            response = http.request(request) #try again
+        end
+
         return response
     end
 
@@ -203,7 +223,14 @@ class PtRESTful
         request = Net::HTTP::Delete.new(uri.path)
         request.body = @data
         request.basic_auth(@user_name, @password)
-        response = http.request(request)
+
+        begin
+            response = http.request(request)
+        rescue
+            sleep 5
+            response = http.request(request) #try again
+        end
+
         return response
     end
 end #PtREST class.
