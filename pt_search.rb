@@ -12,7 +12,7 @@ class PtSearch
     require_relative "./pt_database"
     require_relative "./pt_rules"
 
-    API_ACTIVITY_LIMIT = 500 #Limit on the number of activity IDs per Rehydration API request.
+    API_ACTIVITY_LIMIT = 500 #Limit on the number of activity IDs per Rehydration API request, can be overridden.
     API_DAYS_OLD_LIMIT = 30
 
     attr_accessor :http, #need a HTTP object to make requests of.
@@ -178,25 +178,6 @@ class PtSearch
         return time
     end
 
-    def make_end_time(start_time, interval)
-
-        #Convert to date object.
-        time = get_date_object(start_time)
-
-        #Add interval. Adding seconds...
-        if interval == "day" then
-            time = time + (24 * 60 * 60)
-
-        elsif interval == "hour" then
-            time = time + (60 * 60)
-
-        elsif interval == "minute" then
-            time = time + (60)
-        end
-
-        return get_date_string(time)
-    end
-
     def numeric?(object)
         true if Float(object) rescue false
     end
@@ -289,7 +270,6 @@ class PtSearch
         end
 
         @count_total = count_total
-
     end
 
     def get_counts(rule, start_time, end_time, interval)
@@ -317,8 +297,22 @@ class PtSearch
         return results
     end
 
-    #TODO: needs to check for existing file name, and serialize if needed.
-    def get_file_name(rule, start_time, end_time)
+    # TODO: needs to check for existing file name, and serialize if needed.
+    # Payloads are descending chronological, to first timestamp is end_time, last is start_time.  Got it?
+    def get_file_name(rule, results)
+
+        #Get start_time of this response payload.
+        time = Time.parse(results.first['postedTime'])
+        end_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
+
+        p time
+
+        #Get end_time of this response payload.
+        time = Time.parse(results.last['postedTime'])
+        start_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
+
+        p time
+
         rule_str = rule.gsub(/[^[:alnum:]]/, "")[0..9]
         filename = "#{rule_str}_#{start_time}_#{end_time}"
         return filename
@@ -359,79 +353,6 @@ class PtSearch
         return activities
     end
 
-    def make_data_request(rule, start_time, end_time, tag)
-
-        if start_time == end_time then
-            p "BUG ALERT!"
-        end
-
-        @http.url = @urlSearch
-        data = build_data_request(rule, start_time, end_time)
-
-        if (Time.now - @request_timestamp) < 1 then
-            sleep 1
-        end
-        @request_timestamp = Time.now
-
-        response = @http.POST(data)
-        #p "Getting data based on: #{data}" if ["files", "database"].include?(@storage)
-
-        #Prepare to convert Search API JSON to hash.
-        api_response = []
-        api_response = JSON.parse(response.body)
-
-        if !(api_response["error"] == nil) then
-            p "Handle error!"
-        end
-
-        #Add rules/tags metadata.
-        api_response = append_rules(api_response, rule, tag)
-
-        if @storage == "files" then #write the file.
-
-            filename = ""
-            filename = get_file_name(rule, start_time, end_time)
-
-            p "Storing Search API data in file: #{filename}"
-
-            if @compress_files then
-                File.open("#{@out_box}/#{filename}.json.gz", 'w') do |f|
-                    gz = Zlib::GzipWriter.new(f, level=nil, strategy=nil)
-                    gz.write api_response.to_json
-                    gz.close
-                end
-            else
-                File.open("#{@out_box}/#{filename}.json", "w") do |new_file|
-                    new_file.write(api_response.to_json)
-                end
-            end
-        elsif @storage == "database" #store in database.
-            p "Storing Search API data in database..."
-
-            results = []
-            results = api_response["results"]
-
-            #if !(results == null) then
-            #    results = []
-            #    results = JSON.parse(api_response)
-            #    results = results["results"]
-            #end
-
-            results.each do |activity|
-
-                #p activity
-                @datastore.storeActivity(activity.to_json)
-            end
-        else
-            results = []
-            results = api_response["results"]
-            results.each do |activity|
-                puts activity.to_json
-            end
-        end
-
-    end
-
     #Builds a hash and generates a JSON string.
     #Defaults:
     #@interval = "hour"   #Set in constructor.
@@ -465,22 +386,105 @@ class PtSearch
         return JSON.generate(request)
     end
 
-    def build_data_request(rule, from_date=nil, to_date=nil, max_results=nil)
+    def build_data_request(rule, from_date=nil, to_date=nil, max_results=nil, next_token=nil)
 
         request = build_request(rule, from_date, to_date)
-
 
         if !max_results.nil?
             request[:maxResults] = max_results
         else
-            request[:maxResults] = @max_results
+            request[:maxResults] = @max_results #This client
+        end
+
+        if !next_token.nil?
+            request[:next] = next_token
         end
 
         return JSON.generate(request)
     end
 
+    def make_data_request(rule, start_time, end_time, max_results, next_token, tag)
+
+        @http.url = @urlSearch
+        data = build_data_request(rule, start_time, end_time, max_results, next_token)
+
+        if (Time.now - @request_timestamp) < 1 then
+            sleep 1
+        end
+        @request_timestamp = Time.now
+
+
+        p data
+
+        begin
+            response = @http.POST(data)
+        rescue
+            sleep 5
+            response = @http.POST(data) #try again
+        end
+
+        #Prepare to convert Search API JSON to hash.
+        api_response = []
+        api_response = JSON.parse(response.body)
+
+        if !(api_response["error"] == nil) then
+            p "Handle error!"
+        end
+
+        if @write_rules then
+            #Add rules/tags metadata.
+            api_response = append_rules(api_response, rule, tag)
+        end
+
+        if @storage == "files" then #write the file.
+
+            #Each 'page' has a start and end time, go get those for generating filename.
+
+            filename = ""
+            filename = get_file_name(rule, api_response['results'])
+
+            p "Storing Search API data in file: #{filename}"
+
+            if @compress_files then
+                File.open("#{@out_box}/#{filename}.json.gz", 'w') do |f|
+                    gz = Zlib::GzipWriter.new(f, level=nil, strategy=nil)
+                    gz.write api_response.to_json
+                    gz.close
+                end
+            else
+                File.open("#{@out_box}/#{filename}.json", "w") do |new_file|
+                    new_file.write(api_response.to_json)
+                end
+            end
+        elsif @storage == "database" #store in database.
+            p "Storing Search API data in database..."
+
+            results = []
+            results = api_response['results']
+
+            results.each do |activity|
+
+                #p activity
+                @datastore.storeActivity(activity.to_json)
+            end
+        else
+            results = []
+            results = api_response['results']
+            results.each do |activity|
+                puts activity.to_json
+            end
+        end
+
+        #p api_response['next']
+
+        #Return next_token, or 'nil' if there is not one provided.
+        return api_response['next']
+    end
+
+    #Make initial request, and look for 'next' token, and re-request until the 'next' token is no longer provided.
     def get_data(rule, start_time, end_time, interval, tag=nil)
-        #Get counts based on passed-in interval
+
+        next_token = 'first request'
 
         time_span = "#{start_time} to #{end_time}.  "
         if start_time.nil? and end_time.nil? then
@@ -491,77 +495,13 @@ class PtSearch
             time_span = "#{start_time} to now.  "
         end
 
-        p "Getting '#{interval}' counts for #{time_span} "
-        temp = get_counts(rule, start_time, end_time, interval)
-        bins = []
-        bins = temp['results']
-
-        p "Have #{@count_total} activities for rule: #{rule}"
-
-        if @count_total == 0 then
-            return
+        while !next_token.nil? do
+            if next_token == 'first request' then
+                next_token = nil
+            end
+            next_token = make_data_request(rule, start_time, end_time, max_results, next_token, tag)
         end
 
-        #Initialize some stuff.
-        start_time = bins[0]["timePeriod"]
-        end_time = bins[1]["timePeriod"]
-        count_total = 0
+    end #process_data
 
-        #Walk the bins...
-        bins.each_with_index do |bin, index|
-
-            #p "Looping '#{interval}' bins, index = #{index}, have #{bin["count"]} activities"
-
-            #This handles the case where a single bin exceeds the limit.
-            #Not really needed if you just start with interval = "minute".
-            # down to shorter duration buckets)
-            if bin["count"] > API_ACTIVITY_LIMIT then
-                #Logic for triggering counts for "next level down": day --> hour --> minute
-                if interval == "minute" then
-                    p "NOTIFY about data fidelity..."
-
-                elsif interval == "hour" then
-                    get_data(rule, bin["timePeriod"], bins[index+1]["timePeriod"], "minute", tag)
-
-                elsif interval == "day" then
-                    get_data(rule, bin["timePeriod"], bins[index+1]["timePeriod"], "hour", tag)
-                end
-
-            else
-
-                #Otherwise, we are under the limit, so proceed.
-                count_total = count_total + bin["count"]
-
-                #This handles the case where adding the next bin will exceed the limit
-                if (index+1 == bins.length) or (count_total + bins[index+1]["count"]) > API_ACTIVITY_LIMIT then #Stop and process...
-                    if count_total > 0 then
-                        p "#{rule} --> Going to get #{count_total} activities for #{start_time} to #{end_time} ..." if ["files", "database"].include?(@storage)
-
-                        if start_time == end_time then
-                            p "Error.  Start and End times not set correctly."
-                            end_time = bins[index+1]["timePeriod"] #TODO - need to find source of problem...
-                        end
-
-                        make_data_request(rule, start_time, end_time, tag)
-                        count_total = 0
-                    end
-                    #Reset start time.
-                    if index < bins.length then
-                        start_time = end_time
-                        end_time = bins[index]["timePeriod"]
-                    else
-                        p 'TODO: remove: We are done here'
-                    end
-                else
-                    #Not advancing start time.
-                    #Advance end time.
-                    if (index + 1) == bins.length then
-                        end_time = make_end_time(start_time, interval)
-                    else
-                        end_time = bins[index+1]["timePeriod"]
-                    end
-                end
-            end
-        end #bins loop.
-    end #process_data.
 end #pt_stream class.
