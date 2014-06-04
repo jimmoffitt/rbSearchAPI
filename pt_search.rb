@@ -426,6 +426,11 @@ class PtSearch
             p "Handle error!"
         end
 
+        if (api_response['results'].length == 0) then
+           p "No results returned."
+           return api_response['next']
+        end
+
         if @write_rules then
             #Add rules/tags metadata.
             api_response = append_rules(api_response, rule, tag)
