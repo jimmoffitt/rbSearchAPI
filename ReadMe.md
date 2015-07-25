@@ -4,13 +4,13 @@
 
 ***Gnip Search API***
 
-Search requests to the Historical Search API allow you to retrieve up to the last 500 results for a given timeframe in the last 30 days. It can be used to retrieve the most recent results for a high volume query, all results for a small time slice, or all of the results in the last 30 days using pagination techniques. The Search endpoint is ideal for allowing users to search for recent data for a query or topic. Searches can be refined to any timeframe in the last 30 days to analyze the data in that given timeframe.
+Search requests to the Historical Search API allow you to retrieve all Tweets for a given query fro, the previous 30 days. It can be used to retrieve the most recent results for a high volume query, all results for a small time slice, or all of the results in the last 30 days using pagination techniques. The Search endpoint is ideal for allowing users to search for recent data for a query or topic. Searches can be refined to any timeframe in the last 30 days to analyze the data in that given timeframe.
 
 More information on the Search API can be found [HERE] (http://support.gnip.com/customer/portal/articles/1312908-search-api).
 
 ***So, what does this Gnip Search API client do?***
 
-This Ruby client is a wrapper around the Search API. It was written to be a flexible tool for managing Search API requests. Here are some of the features:
+This Ruby client is a wrapper around the 30-day Search API. It was written to be a flexible tool for managing Search API requests. Here are some of the features:
 
 * Rules can be submitted in a variety of ways: multiple rules from a JSON or YAML file or a single rule passed in via the command-line.  
 * Results for the entire request period will be returned.  The script manages a pagination process that makes multiple requests if necessary.  
@@ -34,7 +34,7 @@ Another feature that has been implemented is the ability to associate tags with 
 
 **Client Overview**
 
-This client application helps manage the data retrieval from the Gnip Search API. This client makes use of the Search API "counts per minute" method by adjusting data request periods in reference to the current limit of 500 activities per data request.  In this way the client can retrieve all tweets for a rule as long as there is no single minute with more than 500 activities.  
+This client application helps manage the data retrieval from the Gnip 30-day Search API. This client makes use of the Search API "counts per minute" method by adjusting data request periods in reference to the current limit of 500 activities per data request.  In this way the client can retrieve all tweets for a rule as long as there is no single minute with more than 500 activities.  
 
 This Search API Ruby client supports submitting multiple rules.  A single rule can be passed in on the command-line, or a Rules file can be passed in and the client will make a Search API request for each rule. 
 
@@ -126,7 +126,7 @@ database:
   port: 3306
   #Note: currently all PowerTrack example clients share a common database schema.
   schema: power-track_development
-  user_name: root
+  user_name: user
   password_encoded:
   #password: test
   type: mysql
