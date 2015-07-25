@@ -4,9 +4,11 @@
 
 ***Gnip Search API***
 
-Search requests to the Historical Search API allow you to retrieve all Tweets for a given query from the previous 30 days. It can be used to retrieve the most recent results for a high volume query, all results for a small time slice, or all of the results in the last 30 days using pagination techniques. The Search endpoint is ideal for allowing users to search for recent data for a query or topic. Searches can be refined to any timeframe in the last 30 days to analyze the data in that given timeframe.
+Search requests to the 30-day Search API allow you to retrieve all Tweets for a given query from the previous 30 days. It can be used to retrieve the most recent results for a high volume query, all results for a small time slice, or all of the results in the last 30 days using a pagination mechanism. The Search endpoint is ideal for allowing users to search for recent data for a query or topic. Searches can be refined to any timeframe in the last 30 days to analyze the data in that given timeframe.
 
-More information on the Search API can be found [HERE] (http://support.gnip.com/customer/portal/articles/1312908-search-api).
+A fundamental feature of the 30-day Search API is that it supports the retrieval of *counts* for a given query, without having to consume all the associated Tweets. This feature enables a useful 'look before you leap' mechanism, for determining trends and data velocity, as well as assessing the data volumes associated with specified filters across time periods of interest. 
+
+More information on the Search API can be found [HERE] (http://support.gnip.com/apis/search_api/).
 
 ***So, what does this Gnip Search API client do?***
 
