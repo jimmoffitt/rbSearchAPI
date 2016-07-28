@@ -71,7 +71,7 @@ class PtSearch
     end
 
     def password_encoded
-        Base64.encode64(@password) unless @passwork.nil?
+        Base64.encode64(@password) unless @password.nil?
     end
 
     #Load in the configuration file details, setting many object attributes.
@@ -283,10 +283,16 @@ class PtSearch
             sleep 1
         end
         @request_timestamp = Time.now
+        
+        #puts data
 
         response = @http.POST(data)
-        #p response.body
+        #puts response.body
+        
+        
         @count_total = get_count_total(response.body)
+        
+        puts rule.split(":")[-1] + ",  " +  @count_total.to_s
 
         results['total'] = @count_total
 
@@ -302,11 +308,21 @@ class PtSearch
     def get_file_name(rule, results)
 
         #Get start_time of this response payload.
-        time = Time.parse(results.first['postedTime'])
-        end_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
+	    begin
+        	time = Time.parse(results.first['postedTime'])
+		rescue
+		    time = Time.parse(results.first['created_at'])
+        end
+
+		end_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
 
         #Get end_time of this response payload.
-        time = Time.parse(results.last['postedTime'])
+        begin
+			time = Time.parse(results.last['postedTime'])
+		rescue
+		    time = Time.parse(results.last['created_at'])
+		end
+			
         start_time = time.year.to_s + sprintf('%02i', time.month) + sprintf('%02i', time.day) + sprintf('%02i', time.hour) + sprintf('%02i', time.min)  + sprintf('%02i', time.sec)
 
         rule_str = rule.gsub(/[^[:alnum:]]/, "")[0..9]
@@ -500,6 +516,8 @@ class PtSearch
                 next_token = nil
             end
             next_token = make_data_request(rule, start_time, end_time, max_results, next_token, tag)
+            #puts next_token
+          sleep 1
         end
 
     end #process_data
