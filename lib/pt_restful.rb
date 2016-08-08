@@ -48,7 +48,6 @@ class PtRESTful
 
     #TODO: implement a method that has product passed in.
     def getURL(product,account_name=nil,label=nil)
-
     end
 
 
@@ -80,66 +79,63 @@ class PtRESTful
         end
     end
 
+	def getSearchURL(account_name=nil,label=nil)
 
-    def getSearchURL(account_name=nil,label=nil)
+	   @url = "https://gnip-api.twitter.com/search/30day/accounts/"  #Root url for 30-Day Search API 2.0.
 
-        @url = "https://search.gnip.com/accounts/"  #Root url for Search PowerTrack.
-
-        if account_name.nil? then #user not passing in anything...
-            if @account_name.nil?
-                p "No account name set.  Can not set url."
-                return @url #albeit incomplete.
-            end
-            @url = @url + "#{@account_name}/search/"
-        else
-            @url = @url + "#{account_name}/search/"
-        end
-
-
-        if label.nil? then #user not passing in anything...
-            if @label.nil?
-                p "No stream label (like 'prod' or 'dev') set.  Can not set url."
-                return @url  #albeit incomplete.
-            end
-            @url = @url + "#{@label}.json"
-        else
-            @url = @url + "#{label}.json"
-        end
-
-        return @url
-    end
+	   
+	   #TODO: migration update
+	   if account_name.nil? then #user not passing in anything...
+		  if @account_name.nil?
+			 p "No account name set.  Can not set url."
+			 return @url #albeit incomplete.
+		  end
+		  @url = @url + "#{@account_name}/"
+	   else
+		  @url = @url + "#{account_name}/"
+	   end
 
 
-    def getSearchCountURL(account_name=nil,label=nil)
+	   if label.nil? then #user not passing in anything...
+		  if @label.nil?
+			 p "No stream label (like 'prod' or 'dev') set.  Can not set url."
+			 return @url  #albeit incomplete.
+		  end
+		  @url = @url + "#{@label}.json"
+	   else
+		  @url = @url + "#{label}.json"
+	   end
 
-        @url = "https://search.gnip.com/accounts/"  #Root url for Search PowerTrack.
+	   return @url
+	end
 
-        if account_name.nil? then #user not passing in anything...
-            if @account_name.nil?
-                p "No account name set.  Can not set url."
-                return @url #albeit incomplete.
-            end
-            @url = @url + "#{@account_name}/search/"
-        else
-            @url = @url + "#{account_name}/search/"
-        end
+	def getSearchCountURL(account_name=nil,label=nil)
 
+	   @url = "https://gnip-api.twitter.com/search/30day/accounts/"  #Root url for 30-Day Search API 2.0 count endpoint.
 
-        if label.nil? then #user not passing in anything...
-            if @label.nil?
-                p "No stream label (like 'prod' or 'dev') set.  Can not set url."
-                return @url  #albeit incomplete.
-            end
-            @url = @url + "#{@label}/counts.json"
-        else
-            @url = @url + "#{label}/counts.json"
-        end
-
-        return @url
-    end
-
+	   if account_name.nil? then #user not passing in anything...
+		  if @account_name.nil?
+			 p "No account name set.  Can not set url."
+			 return @url #albeit incomplete.
+		  end
+		  @url = @url + "#{@account_name}/"
+	   else
+		  @url = @url + "#{account_name}/"
+	   end
 
 
+	   if label.nil? then #user not passing in anything...
+		  if @label.nil?
+			 p "No stream label (like 'prod' or 'dev') set.  Can not set url."
+			 return @url  #albeit incomplete.
+		  end
+		  @url = @url + "#{@label}/counts.json"
+	   else
+		  @url = @url + "#{label}/counts.json"
+	   end
+
+	   return @url
+	end
 
     #Fundamental REST API methods:
     def POST(data=nil)

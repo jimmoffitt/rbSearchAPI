@@ -1,6 +1,32 @@
 ***
-***Ruby Client for Gnip 30-day Search API***
+***Ruby Client for Gnip 30-day Search API 2.0***
 ***
+
+
+***Note: This sample client has been updated for version 2.0***
+
+In summary, these code changes consisted of:
+
++ Updated Search API endpoint:
+    + Updated base URL base variable in pt_search.rb class:: 
+        + Version 1.0: @@base_url = 'https://search.gnip.com/accounts/'
+        + Version 2.0: @@base_url = 'https://gnip-api.twitter.com/search/30day/accounts/'
+    + Updated URL construction pattern in /lib/pt_restful.rb.
+        + Version 1.0: 
+            + getSearchURL returns ```@url = "https://search.gnip.com/accounts/{ACCOUNT_NAME}/search/{LABEL}.json"```
+            + getSearchCountURL returns ```@url = "https://search.gnip.com/accounts/{ACCOUNT_NAME}/search/{LABEL}/count.json"```
+        + Version 2.0:
+            + getSearchURL returns ```@url = "https://gnip-api.twitter.com/search/30day/accounts/{ACCOUNT_NAME}/{LABEL}.json"```
+            + getSearchCountURL returns ```@url = "https://gnip-api.twitter.com/search/30day/accounts/{ACCOUNT_NAME}/{LABEL}/count.json"```
+    
++ Removed ```publisher => 'twitter' request parameter in pt_search.rb class:
+    + In build_request method:
+        + Version 1.0: request = {:publisher => @publisher, :query => rule}
+        + Version 2.0: request = {:query => rule}
+    
++ Refactored/re-arranged supporting classes into a /lib folder.
+ 
+
 
 ***Gnip Search API***
 

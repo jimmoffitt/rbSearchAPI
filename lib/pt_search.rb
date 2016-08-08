@@ -8,9 +8,9 @@ class PtSearch
     require "time"
 
     #PowerTrack classes
-    require_relative "./pt_restful"
-    require_relative "./pt_database"
-    require_relative "./pt_rules"
+    require_relative "pt_restful"
+    require_relative "pt_database"
+    require_relative "pt_rules"
 
     API_ACTIVITY_LIMIT = 500 #Limit on the number of activity IDs per Rehydration API request, can be overridden.
     API_DAYS_OLD_LIMIT = 30
@@ -40,13 +40,15 @@ class PtSearch
 
     def initialize()
         #class variables.
-        @@base_url = "https://search.gnip.com/accounts/"
+	    #TODO: migration update
+        #@@base_url = 'https://search.gnip.com/accounts/'
+		@@base_url = 'https://gnip-api.twitter.com/search/30day/accounts/'
+		
 
         #Initialize stuff.
 
         #Defaults.
         @publisher = "twitter"
-        @product = "search"
         @interval = "minute"
         @max_results = API_ACTIVITY_LIMIT
         @out_box = "./"
@@ -372,7 +374,9 @@ class PtSearch
     #@publisher = "twitter"  #Set in constructor.
 
     def build_request(rule, from_date=nil, to_date=nil)
-        request = {:publisher => @publisher, :query => rule}
+	    #TODO: migration update
+        #request = {:publisher => @publisher, :query => rule}
+	   request = {:query => rule}
 
         if !from_date.nil?
             request[:fromDate] = from_date

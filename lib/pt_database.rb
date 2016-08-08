@@ -105,7 +105,8 @@ class PtDatabase
 
     def connect
         #TODO: need support for password!
-        @client = Mysql2::Client.new(:host => @host, :port => @port, :username => @user_name, :database => @database )
+        ###DEV     @client = Mysql2::Client.new(:host => @host, :port => @port, :username => @user_name, :database => @database )
+      @client = nil
     end
 
     def disconnect
