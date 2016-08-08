@@ -7,7 +7,7 @@
 
 #Example usage: see README.md
 
-require_relative "./pt_search.rb"
+require_relative "./lib/pt_search.rb"
 
 #=======================================================================================================================
 if __FILE__ == $0  #This script code is executed when running this file.
@@ -251,7 +251,6 @@ if __FILE__ == $0  #This script code is executed when running this file.
         end
     end
 
-
     #Publisher defaults to 'Twitter' (handled in client).
     if !$publisher.nil? then
 
@@ -280,9 +279,9 @@ if __FILE__ == $0  #This script code is executed when running this file.
 
     if $look == true then #Handle count requests.
         oSearch.rules.rules.each do |rule|
-            p "Getting counts for rule: #{rule["value"]}"
+            #p "Getting counts for rule: #{rule["value"]}"
             results = oSearch.get_counts(rule["value"], oSearch.from_date, oSearch.to_date, $duration)
-            puts results.to_json
+            #puts results.to_json
         end
     else #Asking for data!
         interval = "minute"
