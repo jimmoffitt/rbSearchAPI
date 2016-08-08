@@ -20,7 +20,7 @@ class PtSearch
 
                   :account_name, :user_name,
                   :password, :password_encoded, #System authentication.
-                  :publisher, :product, :label,
+                  :product, :label,
 
                   :rules, #rules object.
                   :rules_file, #YAML (or JSON?) file with rules.
@@ -48,7 +48,6 @@ class PtSearch
         #Initialize stuff.
 
         #Defaults.
-        @publisher = "twitter"
         @interval = "minute"
         @max_results = API_ACTIVITY_LIMIT
         @out_box = "./"
@@ -141,7 +140,6 @@ class PtSearch
     end
 
     def set_http
-        @http.publisher = @publisher
         @http.user_name = @user_name #Set the info needed for authentication.
         @http.password_encoded = @password_encoded #HTTP class can decrypt password.
 
@@ -371,11 +369,9 @@ class PtSearch
     #Defaults:
     #@interval = "hour"   #Set in constructor.
     #@max_results = API_ACTIVITY_LIMIT   #Set in constructor.
-    #@publisher = "twitter"  #Set in constructor.
 
     def build_request(rule, from_date=nil, to_date=nil)
-	    #TODO: migration update
-        #request = {:publisher => @publisher, :query => rule}
+
 	   request = {:query => rule}
 
         if !from_date.nil?

@@ -23,6 +23,8 @@ In summary, these code changes consisted of:
     + In build_request method:
         + Version 1.0: request = {:publisher => @publisher, :query => rule}
         + Version 2.0: request = {:query => rule}
+ 
++ Eliminated the ```publisher``` attribute. The original client was written to support all Gnip PowerTrack 'Premium' publishers. However, Search remains only available only for Twitter data.        
     
 + Refactored/re-arranged supporting classes into a /lib folder.
  
@@ -34,7 +36,7 @@ Search requests to the 30-day Search API allow you to retrieve all Tweets for a 
 
 A fundamental feature of the 30-day Search API is that it supports the retrieval of *counts* for a given query, without having to consume all the associated Tweets. This feature enables a useful 'look before you leap' mechanism, for determining trends and data velocity, as well as assessing the data volumes associated with specified filters across time periods of interest. 
 
-More information on the Search API can be found [HERE] (http://support.gnip.com/apis/search_api/).
+More information on the 30-Day Search API 2.0 can be found [HERE] (http://support.gnip.com/apis/search_api2.0/).
 
 ***So, what does this Gnip Search API client do?***
 
