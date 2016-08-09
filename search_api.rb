@@ -51,7 +51,7 @@ if __FILE__ == $0  #This script code is executed when running this file.
         #100% parameters, with no config file:
         # Mandatory: username, password, address/account, rule
         # Options: start(defaults to Now - 30 days), end (defaults to Now), tag,
-        # look, duration (defaults to minute), maxResults (defaults to 100), publisher (defaults to Twitter)
+        # look, duration (defaults to minute), maxResults (defaults to 100).
 
         #Passing in a config file.... Or you can set a bunch of parameters.
         o.on('-c CONFIG', '--config', 'Configuration file (including path) that provides account and download settings.
@@ -87,9 +87,6 @@ if __FILE__ == $0  #This script code is executed when running this file.
         o.on('-d DURATION', '--duration', "The 'bucket size' for counts, minute, hour (default), or day" ) {|duration| $duration = duration}  #... as in look before you leap.
 
         o.on('-m MAXRESULTS', '--max', 'Specify the maximum amount of data results.  10 to 500, defaults to 100.') {|max_results| $max_results = max_results}  #... as in look before you leap.
-
-        #Publisher defaults to Twitter.
-        o.on('-b PUBLISHER', '--pub', 'Defaults to Twitter, which currently is the only Publisher supported with Search.') {|publisher| $publisher = publisher}
 
         #Help screen.
         o.on( '-h', '--help', 'Display this screen.' ) do
@@ -248,17 +245,6 @@ if __FILE__ == $0  #This script code is executed when running this file.
 
         if !$zip.nil? then
             oSearch.compress_files = true
-        end
-    end
-
-    #Publisher defaults to 'Twitter' (handled in client).
-    if !$publisher.nil? then
-
-        #
-        if $publisher.downcase != "twitter" then
-            error_msgs << "The Search API currently supports only Twitter, which is set as the default."
-        else
-            oSearch.publisher = $publisher.downcase
         end
     end
 

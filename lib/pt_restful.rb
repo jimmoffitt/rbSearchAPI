@@ -45,38 +45,25 @@ class PtRESTful
 
     #Helper function for building URLs.
 
-
     #TODO: implement a method that has product passed in.
     def getURL(product,account_name=nil,label=nil)
     end
 
 
     def getHistoricalURL(account_name=nil)
-        @url = "https://historical.gnip.com:443/accounts/" #Root url for Historical PowerTrack API.
+        @url = "https://gnip-api.gnip.com/historical/powertrack/accounts/" #Root url for Historical PowerTrack API.
 
         if account_name.nil? then #using object account_name attribute.
             if @account_name.nil?
                 p "No account name set.  Can not set url."
             else
-                @url = @url + "#{@account_name}/jobs.json"
+                @url = @url + "#{@account_name}/publishers/twitter/jobs.json"
             end
         else #account_name passed in, so use that...
-            @url = @url + "#{account_name}/jobs.json"
-        end
-    end
-
-    def getRehydrationURL(account_name=nil)
-        @url = "https://rehydration.gnip.com/accounts/"  #Root url for Rehydration PowerTrack.
-
-        if account_name.nil? then #using object account_name attribute.
-            if @account_name.nil?
-                p "No account name set.  Can not set url."
-            else
-                @url = @url + "#{@account_name}/publishers/#{@publisher}/rehydration/activities.json"
-            end
-        else #account_name passed in, so use that...
-            @url = @url + "#{account_name}/publishers/#{@publisher}/rehydration/activities.json"
-        end
+            @url = @url + "#{account_name}/publishers/twitter/jobs.json"
+		end
+	   
+	    @url
     end
 
 	def getSearchURL(account_name=nil,label=nil)
@@ -106,7 +93,7 @@ class PtRESTful
 		  @url = @url + "#{label}.json"
 	   end
 
-	   return @url
+	   @url
 	end
 
 	def getSearchCountURL(account_name=nil,label=nil)
@@ -134,7 +121,7 @@ class PtRESTful
 		  @url = @url + "#{label}/counts.json"
 	   end
 
-	   return @url
+	   @url
 	end
 
     #Fundamental REST API methods:
@@ -158,7 +145,7 @@ class PtRESTful
             response = http.request(request) #try again
         end
 
-        return response
+        response
     end
 
     def PUT(data=nil)
@@ -181,7 +168,7 @@ class PtRESTful
             response = http.request(request) #try again
         end
 
-        return response
+        response
     end
 
     def GET(params=nil)
@@ -205,7 +192,7 @@ class PtRESTful
             response = http.request(request) #try again
         end
 
-        return response
+        response
     end
 
     def DELETE(data=nil)
@@ -227,7 +214,7 @@ class PtRESTful
             response = http.request(request) #try again
         end
 
-        return response
+        response
     end
 end #PtREST class.
 
